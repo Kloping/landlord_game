@@ -13,10 +13,10 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 /**
- * @Author HRS 3474006766@qq.com
  * @version 0.1
+ * @Author HRS 3474006766@qq.com
  * @Date 21/9/14
- *
+ * <p>
  * 请把images.zip 解压后放在 Mirai Console 目录下
  */
 public final class HPlugin_Landlord extends JavaPlugin {
@@ -24,7 +24,7 @@ public final class HPlugin_Landlord extends JavaPlugin {
     /**
      * 换成你的QQ 用来强制关闭游戏
      */
-    public static final Long youQQ = 3474006766L;
+    public static final Long youQQ = Utils.init("#这里写上你的QQ 用来强制关闭游戏", "host", 3474006766L, Long.class);
 
     public static final ExecutorService threads = Executors.newFixedThreadPool(10);
 

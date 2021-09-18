@@ -2,8 +2,8 @@ package com.hrs.kloping;
 
 import com.hrs.kloping.entity.Card;
 import com.hrs.kloping.entity.OCardSet;
-import net.mamoe.mirai.contact.Contact;
 import net.mamoe.mirai.contact.Group;
+import net.mamoe.mirai.contact.Member;
 import net.mamoe.mirai.message.data.At;
 import net.mamoe.mirai.message.data.Image;
 import net.mamoe.mirai.message.data.Message;
@@ -24,7 +24,7 @@ public class Table {
     public List<Card> ListCards = new ArrayList<>();
     public List<Card> Dcards = new CopyOnWriteArrayList<>();
     private Map<Long, List<Card>> playerCards = new ConcurrentHashMap<>();
-    private Map<Long, Map.Entry<Contact, Message>> playerEns = new ConcurrentHashMap<>();
+    private Map<Long, Map.Entry<Member, Message>> playerEns = new ConcurrentHashMap<>();
     private OCardSet this_cards;
 
     public Table(Group group, Map<Card, Image> imageMap) {
@@ -71,7 +71,7 @@ public class Table {
         ListCards.clear();
         for (long q : playerCards.keySet()) {
             OCardSet.sort(playerCards.get(q));
-            Map.Entry<Contact, Message> kv = playerEns.get(q);
+            Map.Entry<Member, Message> kv = playerEns.get(q);
             kv.getKey().sendMessage(
                     new MessageChainBuilder()
                             .append("你这一局的牌是:\r\n")
@@ -107,7 +107,7 @@ public class Table {
             playerCards.get(qq).addAll(Dcards);
             threads.execute(() -> {
                 OCardSet.sort(playerCards.get(qq));
-                Map.Entry<Contact, Message> kv = playerEns.get(qq);
+                Map.Entry<Member, Message> kv = playerEns.get(qq);
                 kv.getKey().sendMessage(
                         new MessageChainBuilder()
                                 .append("你这一局地主的牌是:\r\n")
@@ -264,7 +264,7 @@ public class Table {
     public void sendThisCards() {
         long qq = players.get(index);
         OCardSet.sort(playerCards.get(qq));
-        Map.Entry<Contact, Message> kv = playerEns.get(qq);
+        Map.Entry<Member, Message> kv = playerEns.get(qq);
         kv.getKey().sendMessage(
                 new MessageChainBuilder()
                         .append("你这一局剩下的牌是:\r\n")
@@ -292,6 +292,7 @@ public class Table {
                 } else return false;
             }
             if (values.length >= 5) {
+                if (Utils.isFly(values) > 0) return true;
                 //判断三带二
                 if (values.length == 5)
                     if (getMaxSameC(values) == 3)
@@ -348,16 +349,22 @@ public class Table {
         if (value2s.length == 3 && values.length == 3) {
             return values[0] > value2s[0];
         }
+        int vc1 = getMaxSameC(values);
+        int vc2 = getMaxSameC(value2s);
         if (values.length == 4) {
-            if (getMaxSameC(value2s) == 3 && getMaxSameC(values) == 3) {
+            if (vc2 < 4 && vc1 == 4) return true;
+            if (vc2 == 3 && vc1 == 3) {
                 int v2 = getMaxSameN(value2s);
                 int v1 = getMaxSameN(values);
                 return v1 > v2;
-            } else if (getMaxSameC(values) == 4 && getMaxSameC(value2s) == 4) {
+            } else if (vc1 == 4 && vc2 == 4) {
                 return values[0] > value2s[0];
             }
         }
         if (values.length >= 5) {
+
+            if (Utils.isFly(values) > 0 && Utils.isFly(value2s) > 0)
+                return Utils.isBiggerFly(values, value2s);
             //判断三带二
             if (values.length == 5) {
                 if (getMaxSameC(value2s) == 3 && getMaxSameC(values) == 3) {
@@ -435,8 +442,9 @@ public class Table {
     }
 
     private void tipsWillWin(long q, int n) {
-        Message message = playerEns.get(q).getValue();
-        group.sendMessage(new MessageChainBuilder().append(message).append("警告!警告!就剩" + n + "张牌了!").build());
+        if (n <= 0) return;
+        Member m = playerEns.get(q).getKey();
+        group.sendMessage(new MessageChainBuilder().append(m.getNick()).append("警告!警告!就剩" + n + "张牌了!").build());
     }
 
     private void testWin() {
@@ -455,18 +463,20 @@ public class Table {
 
     private void tipsCivilianWin() {
         MessageChainBuilder builder = new MessageChainBuilder();
-        for (Map.Entry<Contact, Message> e : playerEns.values()) {
+        for (Map.Entry<Member, Message> e : playerEns.values()) {
             builder.append(e.getValue());
         }
         builder.append("平民胜利!!!");
+        group.sendMessage(builder.build());
     }
 
     private void tipsLandlordWin() {
         MessageChainBuilder builder = new MessageChainBuilder();
-        for (Map.Entry<Contact, Message> e : playerEns.values()) {
+        for (Map.Entry<Member, Message> e : playerEns.values()) {
             builder.append(e.getValue());
         }
         builder.append("地主胜利!!!");
+        group.sendMessage(builder.build());
     }
 
     private void tipsNotU(int in) {
@@ -496,5 +506,9 @@ public class Table {
     private void next() {
         index++;
         index = index == 3 ? 0 : index;
+    }
+
+    private void destroy() {
+
     }
 }

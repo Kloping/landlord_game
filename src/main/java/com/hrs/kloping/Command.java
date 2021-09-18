@@ -99,6 +99,10 @@ public class Command {
         isCreated = false;
         isStarted = false;
         table.group.sendMessage("对局结束");
+        table.players.clear();
+        table.group=null;
+        table.ListCards.clear();
+        table.Dcards.clear();
         table = null;
         System.gc();
     }
