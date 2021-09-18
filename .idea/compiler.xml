@@ -15,7 +15,7 @@
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
-      <module name="landlord_game" options="--add-modules java.base,java.datatransfer,java.desktop" />
+      <module name="landlord_game" options="" />
     </option>
   </component>
 </project>
