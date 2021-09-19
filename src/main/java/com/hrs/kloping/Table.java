@@ -27,10 +27,23 @@ public class Table {
     private Map<Long, Map.Entry<Member, Message>> playerEns = new ConcurrentHashMap<>();
     private OCardSet this_cards;
 
+    public void destroy() {
+        group = null;
+        players.clear();
+        cards.clear();
+        ListCards.clear();
+        Dcards.clear();
+        playerCards.clear();
+        playerEns.clear();
+        this_cards = null;
+    }
+
     public Table(Group group, Map<Card, Image> imageMap) {
         this.group = group;
         this.cards.putAll(imageMap);
-        this.ListCards.addAll(cards.keySet());
+        for (Card card : cards.keySet()) {
+            this.ListCards.add(card);
+        }
     }
 
     public void addPlayer(long qq) {
@@ -131,7 +144,14 @@ public class Table {
                 tipsRob();
                 return null;
             } else {
-                Command.destroy();
+                threads.execute(() -> {
+                    try {
+                        Thread.sleep(500);
+                        Command.destroy();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                });
                 return "对局结束无人要地主";
             }
         } else
@@ -141,11 +161,11 @@ public class Table {
     private void InitR() {
         r1 = rand.nextInt(54);
         do {
-            r2 = rand.nextInt(54);
+            r2 = rand.nextInt(53);
         }
         while (r1 == r2);
         do {
-            r3 = rand.nextInt(54);
+            r3 = rand.nextInt(52);
         } while (r1 == r3 || r2 == r3);
     }
 
@@ -456,7 +476,14 @@ public class Table {
                     tipsLandlordWin();
                 else
                     tipsCivilianWin();
-                Command.destroy();
+                threads.execute(() -> {
+                    try {
+                        Thread.sleep(500);
+                        Command.destroy();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                });
             }
         }
     }
@@ -506,9 +533,5 @@ public class Table {
     private void next() {
         index++;
         index = index == 3 ? 0 : index;
-    }
-
-    private void destroy() {
-
     }
 }

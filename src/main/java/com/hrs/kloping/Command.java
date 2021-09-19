@@ -96,13 +96,12 @@ public class Command {
     }
 
     public static void destroy() {
+        table.group.sendMessage("对局结束");
+        if (table != null) {
+            table.destroy();
+        }
         isCreated = false;
         isStarted = false;
-        table.group.sendMessage("对局结束");
-        table.players.clear();
-        table.group=null;
-        table.ListCards.clear();
-        table.Dcards.clear();
         table = null;
         System.gc();
     }

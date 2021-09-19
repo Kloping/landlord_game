@@ -14,6 +14,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import static com.hrs.kloping.entity.Card.getFileNameFromCard;
 
 public class Utils {
+
     public final static synchronized Image getImageFromCard(Card card, Contact contact) {
         return Contact.uploadImage(contact, new File(getFileNameFromCard(card)));
     }
