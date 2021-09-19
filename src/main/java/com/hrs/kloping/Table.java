@@ -75,7 +75,6 @@ public class Table {
         ListCards.remove(r3);
         Collections.shuffle(ListCards);
         int index = 1;
-        players = null;
         for (Card card : ListCards) {
             long q = players.get(index++ % 3);
             List<Card> list = playerCards.get(q);
