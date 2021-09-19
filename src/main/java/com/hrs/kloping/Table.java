@@ -75,7 +75,6 @@ public class Table {
         ListCards.remove(r3);
         Collections.shuffle(ListCards);
         int index = 1;
-        players = null;
         for (Card card : ListCards) {
             long q = players.get(index++ % 3);
             List<Card> list = playerCards.get(q);
@@ -367,7 +366,7 @@ public class Table {
         Arrays.sort(value2s);
         Arrays.sort(values);
         if (values.length == 2 && values[0] == 14 && values[1] == 15) return true;
-        if (value2s.length == 1 && value2s.length == 1) {
+        if (values.length == 1 && value2s.length == 1) {
             return values[0] > value2s[0];
         }
         if (value2s.length == 2 && values.length == 2) {
@@ -540,5 +539,16 @@ public class Table {
     private void next() {
         index++;
         index = index == 3 ? 0 : index;
+    }
+
+    public static void main(String[] args) {
+        List<Card> l1 = new CopyOnWriteArrayList<>();
+        List<Card> l2 = new CopyOnWriteArrayList<>();
+        l1.add(new Card(Card.En._3, Card.Type._V));
+        l1.add(new Card(Card.En._3, Card.Type._W));
+        l1.add(new Card(Card.En._3, Card.Type._A));
+        l1.add(new Card(Card.En._3, Card.Type._X));
+        l2.add(new Card(Card.En._Y, Card.Type._G));
+        System.out.println(isBigger(l1,l2));
     }
 }
