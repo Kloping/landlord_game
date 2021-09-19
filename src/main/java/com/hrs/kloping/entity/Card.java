@@ -1,12 +1,10 @@
 package com.hrs.kloping.entity;
 
-import net.mamoe.mirai.contact.Contact;
-import net.mamoe.mirai.contact.Group;
-import net.mamoe.mirai.message.data.Image;
+import org.jetbrains.annotations.NotNull;
 
-import java.io.File;
+import java.util.Objects;
 
-public class Card {
+public class Card implements Comparable<Card> {
     public enum En {
         _3(1, "3"),
         _4(2, "4"),
@@ -85,7 +83,7 @@ public class Card {
         return type;
     }
 
-    public static final String getFileNameFromCard(Card card){
+    public static final String getFileNameFromCard(Card card) {
         return String.format("./images/%s%s.jpg", card.getType().st == 0 ? "" : card.getType().st, card.en.v2);
     }
 
@@ -95,5 +93,17 @@ public class Card {
                 "en=" + en +
                 ", type=" + type +
                 '}';
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(en, type);
+    }
+
+    @Override
+    public int compareTo(@NotNull Card o) {
+        Card o1 = this;
+        Card o2 = o;
+        return -(o1.getEn().v - o2.getEn().v);
     }
 }

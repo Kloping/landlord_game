@@ -39,6 +39,7 @@ public class Table {
     }
 
     public Table(Group group, Map<Card, Image> imageMap) {
+        destroy();
         this.group = group;
         this.cards.putAll(imageMap);
         for (Card card : cards.keySet()) {
@@ -74,10 +75,12 @@ public class Table {
         ListCards.remove(r3);
         Collections.shuffle(ListCards);
         int index = 1;
+        players = null;
         for (Card card : ListCards) {
             long q = players.get(index++ % 3);
             List<Card> list = playerCards.get(q);
             if (list == null) list = new CopyOnWriteArrayList<>();
+            if (list.contains(card)) continue;
             list.add(card);
             playerCards.put(q, list);
         }
@@ -85,18 +88,22 @@ public class Table {
         for (long q : playerCards.keySet()) {
             OCardSet.sort(playerCards.get(q));
             Map.Entry<Member, Message> kv = playerEns.get(q);
-            kv.getKey().sendMessage(
-                    new MessageChainBuilder()
-                            .append("你这一局的牌是:\r\n")
-                            .append(getImageFromFilePath(
-                                    Drawer.createImage(cards2Images(playerCards.get(q))),
-                                    kv.getKey())
-                            ).build()
-            );
+            sendThisCards(kv, q);
         }
         group.sendMessage("发牌完成!!");
         group.sendMessage("开始抢地主..");
         startRob();
+    }
+
+    private synchronized void sendThisCards(final Map.Entry<Member, Message> kv, final long q) {
+        kv.getKey().sendMessage(
+                new MessageChainBuilder()
+                        .append("你这一局的牌是:\r\n")
+                        .append(getImageFromFilePath(
+                                Drawer.createImage(cards2Images(playerCards.get(q))),
+                                kv.getKey())
+                        ).build()
+        );
     }
 
     private long landlord = -1;
@@ -196,7 +203,7 @@ public class Table {
     public static synchronized final List<Card> parse2text(String text, List<Card> listCards) {
         List<Card> list = new CopyOnWriteArrayList<>();
         List<Card> nlist = new CopyOnWriteArrayList<>();
-        char[] chars = text.toCharArray();
+        char[] chars = text.trim().toCharArray();
         try {
             for (char c : chars) {
                 Card.En en = Character2Card.get(c);

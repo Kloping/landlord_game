@@ -5,6 +5,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -12,7 +13,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class Drawer {
 
-    public static String createImage(List<Image> images) {
+    public static String createImage(Collection<Image> images) {
         int width = images.size() * 50 + 75;
         int height = 200;
         BufferedImage bi = new BufferedImage(width, height, BufferedImage.TYPE_INT_BGR);

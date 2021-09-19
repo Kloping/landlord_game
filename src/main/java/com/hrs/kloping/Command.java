@@ -50,6 +50,7 @@ public class Command {
         if (result != null)
             group.sendMessage(result.toString());
         else {
+            if (!isStarted) return;
             if (text.startsWith("出")) {
                 text = text.substring(1).replaceAll(" ", "");
                 table.pool(text, qq);
