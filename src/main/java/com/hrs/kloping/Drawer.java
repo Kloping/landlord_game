@@ -6,14 +6,17 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
-import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArraySet;
 
 public class Drawer {
 
-    public static String createImage(Collection<Image> images) {
+    public static String createImage(Collection<Image> images_) {
+        Set<Image> images = new CopyOnWriteArraySet<>();
+        images.addAll(images_);
         int width = images.size() * 50 + 75;
         int height = 200;
         BufferedImage bi = new BufferedImage(width, height, BufferedImage.TYPE_INT_BGR);

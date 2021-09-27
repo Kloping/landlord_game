@@ -17,7 +17,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://E:/MyJars/mirai-console-2.7.1-dev-1-all.jar!/" />
+          <root url="jar://E:/MyJars/mirai-core-all-2.8.0-M1.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -26,7 +26,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://E:/MyJars/mirai-core-all-2.7.1-dev-1-all.jar!/" />
+          <root url="jar://E:/MyJars/mirai-console-2.8.0-M1.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />

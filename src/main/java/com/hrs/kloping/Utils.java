@@ -9,7 +9,9 @@ import java.io.*;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.CopyOnWriteArraySet;
 
 import static com.hrs.kloping.entity.Card.getFileNameFromCard;
 
@@ -27,8 +29,10 @@ public class Utils {
         return Contact.uploadImage(contact, new File(path));
     }
 
-    public static List<java.awt.Image> cards2Images(List<Card> cards) {
+    public static List<java.awt.Image> cards2Images(List<Card> cards_) {
         List<java.awt.Image> list = new CopyOnWriteArrayList<>();
+        Set<Card> cards = new CopyOnWriteArraySet<>();
+        cards.addAll(cards_);
         for (Card card : cards) {
             list.add(Drawer.loadImage(Card.getFileNameFromCard(card)));
         }

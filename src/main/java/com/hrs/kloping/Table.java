@@ -549,6 +549,6 @@ public class Table {
         l1.add(new Card(Card.En._3, Card.Type._A));
         l1.add(new Card(Card.En._3, Card.Type._X));
         l2.add(new Card(Card.En._Y, Card.Type._G));
-        System.out.println(isBigger(l1,l2));
+        System.out.println(isBigger(l1, l2));
     }
 }
