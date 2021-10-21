@@ -29,7 +29,7 @@ public final class HPlugin_Landlord extends JavaPlugin {
     public static final ExecutorService threads = Executors.newFixedThreadPool(10);
 
     private HPlugin_Landlord() {
-        super(new JvmPluginDescriptionBuilder("com.hrs.kloping.h_plugin_Landlord", "0.1")
+        super(new JvmPluginDescriptionBuilder("com.hrs.kloping.h_plugin_Landlord", "0.16.2")
                 .name("插件_1 Author => HRS")
                 .info("斗地主游戏")
                 .author("HRS")
