@@ -5,7 +5,6 @@ import com.hrs.kloping.entity.OCardSet;
 import net.mamoe.mirai.contact.Group;
 import net.mamoe.mirai.contact.Member;
 import net.mamoe.mirai.message.data.At;
-import net.mamoe.mirai.message.data.Image;
 import net.mamoe.mirai.message.data.Message;
 import net.mamoe.mirai.message.data.MessageChainBuilder;
 
@@ -20,7 +19,7 @@ public class Table {
     public static final Random rand = new Random();
     public Group group = null;
     public List<Long> players = new CopyOnWriteArrayList<>();
-    public Map<Card, Image> cards = new ConcurrentHashMap<>();
+    public List<Card> cards = new CopyOnWriteArrayList<>();
     public List<Card> ListCards = new ArrayList<>();
     public List<Card> Dcards = new CopyOnWriteArrayList<>();
     private Map<Long, List<Card>> playerCards = new ConcurrentHashMap<>();
@@ -38,11 +37,11 @@ public class Table {
         this_cards = null;
     }
 
-    public Table(Group group, Map<Card, Image> imageMap) {
+    public Table(Group group, List<Card> imagecs) {
         destroy();
         this.group = group;
-        this.cards.putAll(imageMap);
-        for (Card card : cards.keySet()) {
+        this.cards.addAll(imagecs);
+        for (Card card : cards) {
             this.ListCards.add(card);
         }
     }

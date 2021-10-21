@@ -4,8 +4,10 @@ import com.hrs.kloping.entity.Card;
 import com.hrs.kloping.entity.OCardSet;
 import net.mamoe.mirai.contact.Group;
 
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class Command {
     public static boolean isStarted = false;
@@ -73,7 +75,7 @@ public class Command {
         } else return "游戏未创建或已开启";
     }
 
-    public static final Map<Long, Map<Card, net.mamoe.mirai.message.data.Image>> listImageMap = new ConcurrentHashMap<>();
+    public static final Map<Long, List<Card>> listImageMap = new ConcurrentHashMap<>();
     public static Table table;
 
     public static synchronized String InitTable(Group group) {
@@ -83,9 +85,9 @@ public class Command {
                 if (listImageMap.containsKey(group.getId())) {
                     table = new Table(group, listImageMap.get(group.getId()));
                 } else {
-                    Map<Card, net.mamoe.mirai.message.data.Image> map = new ConcurrentHashMap<>();
+                    List<Card> map = new CopyOnWriteArrayList<>();
                     for (Card card : OCardSet.getCards()) {
-                        map.put(card, Utils.getImageFromCard(card, group));
+                        map.add(card);
                     }
                     listImageMap.put(group.getId(), map);
                     table = new Table(group, map);
