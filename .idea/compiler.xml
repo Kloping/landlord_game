@@ -6,11 +6,12 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="landlord_game" />
+        <module name="Mirai_Plugins" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="landlord_game" target="11" />
+      <module name="Mirai_Plugins" target="11" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">

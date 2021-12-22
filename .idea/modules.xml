@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/landlord_game.iml" filepath="$PROJECT_DIR$/.idea/landlord_game.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Mirai_Plugins.iml" filepath="$PROJECT_DIR$/Mirai_Plugins.iml" />
     </modules>
   </component>
 </project>

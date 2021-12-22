@@ -2,6 +2,7 @@ package com.hrs.kloping.entity;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.net.URL;
 import java.util.Objects;
 
 public class Card implements Comparable<Card> {
@@ -84,7 +85,8 @@ public class Card implements Comparable<Card> {
     }
 
     public static final String getFileNameFromCard(Card card) {
-        return String.format("./images/%s%s.jpg", card.getType().st == 0 ? "" : card.getType().st, card.en.v2);
+        URL url = Card.class.getClassLoader().getResource(String.format("images/%s%s.jpg", card.getType().st == 0 ? "" : card.getType().st, card.en.v2));
+        return url.getFile();
     }
 
     @Override

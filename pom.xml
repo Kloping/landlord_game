@@ -20,16 +20,15 @@
         </repository>
     </repositories>
     <dependencies>
-<!--    如果是拉取的而又没有本地支持包,请放开下面的依赖-->
-        <!--        <dependency>
+        <dependency>
             <groupId>net.mamoe</groupId>
             <artifactId>mirai-core-api-jvm</artifactId>
-            <version>2.7-M2</version>
+            <version>LATEST</version>
         </dependency>
         <dependency>
             <groupId>net.mamoe</groupId>
             <artifactId>mirai-console</artifactId>
-            <version>2.7-M1</version>
-        </dependency>-->
+            <version>LATEST</version>
+        </dependency>
     </dependencies>
 </project>
