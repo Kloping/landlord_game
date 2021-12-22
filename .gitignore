@@ -23,3 +23,9 @@
 hs_err_pid*
 out
 target
+**/test
+/temp
+config
+conf
+cache
+bots
