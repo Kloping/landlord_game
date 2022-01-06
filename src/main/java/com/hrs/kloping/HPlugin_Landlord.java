@@ -17,7 +17,6 @@ import java.util.concurrent.Executors;
  * @Author HRS 3474006766@qq.com
  * @Date 21/9/14
  * <p>
- * 请把images.zip 解压后放在 Mirai Console 目录下
  */
 public final class HPlugin_Landlord extends JavaPlugin {
     public static final HPlugin_Landlord INSTANCE = new HPlugin_Landlord();
@@ -29,8 +28,8 @@ public final class HPlugin_Landlord extends JavaPlugin {
     public static final ExecutorService threads = Executors.newFixedThreadPool(10);
 
     private HPlugin_Landlord() {
-        super(new JvmPluginDescriptionBuilder("com.hrs.kloping.h_plugin_Landlord", "1.0")
-                .name("插件_1 Author => HRS")
+        super(new JvmPluginDescriptionBuilder("com.hrs.kloping.h_plugin_Landlord", "2.0")
+                .name("LandlordGame")
                 .info("斗地主游戏")
                 .author("HRS")
                 .build());
