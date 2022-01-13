@@ -5,6 +5,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
@@ -12,8 +13,10 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArraySet;
 
+/**
+ * @author github-kloping
+ */
 public class Drawer {
-
     public static String createImage(Collection<Image> images_) {
         Set<Image> images = new CopyOnWriteArraySet<>();
         images.addAll(images_);
@@ -48,6 +51,18 @@ public class Drawer {
             if (map.containsKey(fileName)) return map.get(fileName);
             BufferedImage img = ImageIO.read(new File(fileName));
             map.put(fileName, img);
+            return img;
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException();
+        }
+    }
+
+    public static final synchronized Image loadImage(URL url) {
+        try {
+            if (map.containsKey(url.getPath())) return map.get(url.getPath());
+            BufferedImage img = ImageIO.read(url);
+            map.put(url.getPath(), img);
             return img;
         } catch (Exception e) {
             e.printStackTrace();

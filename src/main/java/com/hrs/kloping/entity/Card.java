@@ -3,6 +3,7 @@ package com.hrs.kloping.entity;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Objects;
 
@@ -85,9 +86,14 @@ public class Card implements Comparable<Card> {
         return type;
     }
 
-    public static final String getFileNameFromCard(Card card) {
-        URL url = Card.class.getClassLoader().getResource(String.format("images/%s%s.jpg", card.getType().st == 0 ? "" : card.getType().st, card.en.v2));
-        return new File(url.getFile()).getAbsolutePath();
+    public static final URL getFileNameFromCard(Card card) throws MalformedURLException {
+        String name = String.format("images/%s%s.jpg", card.getType().st == 0 ? "" : card.getType().st, card.en.v2);
+        try {
+            URL url = Card.class.getClassLoader().getResource(name);
+            return url;
+        } catch (Exception e) {
+            return new File("./" + name).toURI().toURL();
+        }
     }
 
     @Override

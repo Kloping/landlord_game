@@ -6,6 +6,7 @@ import net.mamoe.mirai.contact.Contact;
 import net.mamoe.mirai.message.data.Image;
 
 import java.io.*;
+import java.net.MalformedURLException;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,26 +16,25 @@ import java.util.concurrent.CopyOnWriteArraySet;
 
 import static com.hrs.kloping.entity.Card.getFileNameFromCard;
 
+/**
+ * @author github-kloping
+ */
 public class Utils {
-
-    public final static synchronized Image getImageFromCard(Card card, Contact contact) {
-        return Contact.uploadImage(contact, new File(getFileNameFromCard(card)));
-    }
-
-    public final static synchronized Image getImageFromFile(File file, Contact contact) {
-        return Contact.uploadImage(contact, file);
-    }
 
     public final static synchronized Image getImageFromFilePath(String path, Contact contact) {
         return Contact.uploadImage(contact, new File(path));
     }
 
-    public static List<java.awt.Image> cards2Images(List<Card> cards_) {
+    public static List<java.awt.Image> cards2Images(List<Card> cards_)  {
         List<java.awt.Image> list = new CopyOnWriteArrayList<>();
         Set<Card> cards = new CopyOnWriteArraySet<>();
         cards.addAll(cards_);
         for (Card card : cards) {
-            list.add(Drawer.loadImage(Card.getFileNameFromCard(card)));
+            try {
+                list.add(Drawer.loadImage(Card.getFileNameFromCard(card)));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         return list;
     }
