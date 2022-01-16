@@ -2,8 +2,6 @@ package com.hrs.kloping;
 
 import com.hrs.kloping.entity.Card;
 import com.hrs.kloping.entity.OCardSet;
-import net.mamoe.mirai.Bot;
-import net.mamoe.mirai.BotFactory;
 import net.mamoe.mirai.contact.Group;
 
 import java.util.List;
@@ -49,13 +47,6 @@ public class Command {
                 if (qq == HPlugin_Landlord.youQQ)
                     destroy();
                 else tipsCantClose(group);
-                break;
-            case "test0":
-                Group g0 = Bot.getInstance(930204019L).getGroup(794238572L);
-                Table table = new Table(g0, OCardSet.getCards());
-                table.addPlayer(3474006766L);
-                table.addPlayer(3528641250L);
-                table.addPlayer(291841860L);
                 break;
         }
         if (result != null)
