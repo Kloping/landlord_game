@@ -28,7 +28,7 @@ public final class HPlugin_Landlord extends JavaPlugin {
     public static final ExecutorService threads = Executors.newFixedThreadPool(10);
 
     private HPlugin_Landlord() {
-        super(new JvmPluginDescriptionBuilder("com.hrs.kloping.h_plugin_Landlord", "2.5-end")
+        super(new JvmPluginDescriptionBuilder("com.hrs.kloping.h_plugin_Landlord", "2.6-sequel")
                 .name("LandlordGame")
                 .info("斗地主游戏")
                 .author("HRS")

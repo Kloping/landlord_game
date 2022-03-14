@@ -5,6 +5,7 @@ import com.hrs.kloping.entity.OCardSet;
 import net.mamoe.mirai.contact.Group;
 import net.mamoe.mirai.contact.Member;
 import net.mamoe.mirai.message.data.At;
+import net.mamoe.mirai.message.data.Face;
 import net.mamoe.mirai.message.data.Message;
 import net.mamoe.mirai.message.data.MessageChainBuilder;
 
@@ -15,6 +16,9 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import static com.hrs.kloping.HPlugin_Landlord.threads;
 import static com.hrs.kloping.Utils.*;
 
+/**
+ * @author github-kloping
+ */
 public class Table {
     public static final Random rand = new Random();
     public Group group = null;
@@ -128,7 +132,7 @@ public class Table {
                 Map.Entry<Member, Message> kv = playerEns.get(qq);
                 kv.getKey().sendMessage(
                         new MessageChainBuilder()
-                                .append("你这一局地主的牌是:\r\n")
+                                .append("您这一局地主的全部牌是:\r\n")
                                 .append(getImageFromFilePath(
                                         Drawer.createImage(cards2Images(playerCards.get(qq))),
                                         kv.getKey())
@@ -137,12 +141,23 @@ public class Table {
                 tipsPool();
             });
             index = players.indexOf(qq);
+            sendLandlordCards();
             return "你抢到地主了!!";
-        } else
+        } else {
             return "还没轮到你抢地主呢";
+        }
     }
 
-    public String no_rob(long qq) {
+    private void sendLandlordCards() {
+        group.sendMessage(new MessageChainBuilder()
+                .append("这一局地主的牌是:\r\n")
+                .append(getImageFromFilePath(
+                        Drawer.createImage(cards2Images(Dcards)),
+                        group)
+                ).build());
+    }
+
+    public String noRob(long qq) {
         if (landlording == players.indexOf(qq)) {
             landlording++;
             if (landlording < 3) {
@@ -159,8 +174,9 @@ public class Table {
                 });
                 return "对局结束无人要地主";
             }
-        } else
+        } else {
             return "还没轮到你抢地主呢";
+        }
     }
 
     private void InitR() {
@@ -178,24 +194,24 @@ public class Table {
         return players;
     }
 
-    public static final Map<Character, Card.En> Character2Card = new ConcurrentHashMap<>();
+    public static final Map<Character, Card.En> CHARACTER_2_CARD = new ConcurrentHashMap<>();
 
     static {
-        Character2Card.put('3', Card.En._3);
-        Character2Card.put('4', Card.En._4);
-        Character2Card.put('5', Card.En._5);
-        Character2Card.put('6', Card.En._6);
-        Character2Card.put('7', Card.En._7);
-        Character2Card.put('8', Card.En._8);
-        Character2Card.put('9', Card.En._9);
-        Character2Card.put('0', Card.En._10);
-        Character2Card.put('j', Card.En._J);
-        Character2Card.put('q', Card.En._Q);
-        Character2Card.put('k', Card.En._K);
-        Character2Card.put('a', Card.En._A);
-        Character2Card.put('2', Card.En._2);
-        Character2Card.put('x', Card.En._X);
-        Character2Card.put('y', Card.En._Y);
+        CHARACTER_2_CARD.put('3', Card.En._3);
+        CHARACTER_2_CARD.put('4', Card.En._4);
+        CHARACTER_2_CARD.put('5', Card.En._5);
+        CHARACTER_2_CARD.put('6', Card.En._6);
+        CHARACTER_2_CARD.put('7', Card.En._7);
+        CHARACTER_2_CARD.put('8', Card.En._8);
+        CHARACTER_2_CARD.put('9', Card.En._9);
+        CHARACTER_2_CARD.put('0', Card.En._10);
+        CHARACTER_2_CARD.put('j', Card.En._J);
+        CHARACTER_2_CARD.put('q', Card.En._Q);
+        CHARACTER_2_CARD.put('k', Card.En._K);
+        CHARACTER_2_CARD.put('a', Card.En._A);
+        CHARACTER_2_CARD.put('2', Card.En._2);
+        CHARACTER_2_CARD.put('x', Card.En._X);
+        CHARACTER_2_CARD.put('y', Card.En._Y);
     }
 
     public static synchronized final List<Card> parse2text(String text, List<Card> listCards) {
@@ -204,7 +220,7 @@ public class Table {
         char[] chars = text.trim().toCharArray();
         try {
             for (char c : chars) {
-                Card.En en = Character2Card.get(c);
+                Card.En en = CHARACTER_2_CARD.get(c);
                 int r = findCardByEn(en, listCards, nlist);
                 if (r == -1) return null;
                 Card card = listCards.get(r);
@@ -249,7 +265,9 @@ public class Table {
             } else {
                 if (isBigger(cards, this_cards.cards)) {
                     poolNow(qq, cards);
-                } else tipsSmaller();
+                } else {
+                    tipsSmaller();
+                }
             }
             tipsPool();
         } else {
@@ -312,7 +330,7 @@ public class Table {
             if (values.length == 4) {
                 if (getMaxSameC(values) >= 3) {
                     return true;
-                } else if (values[0] == values[1] && values[2] == values[3]) {
+                } else if (values[0] == values[1] && values[2] == values[3] && values[1] == values[2]) {
                     return true;
                 } else return false;
             }
@@ -359,12 +377,21 @@ public class Table {
         }
     }
 
+    /**
+     * 牌比较 cards 比 cards1 大 true
+     *
+     * @param cards
+     * @param cards1
+     * @return
+     */
     private static boolean isBigger(List<Card> cards, List<Card> cards1) {
         int[] values = cards2values(cards);
         int[] value2s = cards2values(cards1);
         Arrays.sort(value2s);
         Arrays.sort(values);
-        if (values.length == 2 && values[0] == 14 && values[1] == 15) return true;
+        if (values.length == 2 && values[0] == 14 && values[1] == 15) {
+            return true;
+        }
         if (values.length == 1 && value2s.length == 1) {
             return values[0] > value2s[0];
         }
@@ -376,7 +403,7 @@ public class Table {
         }
         int vc1 = getMaxSameC(values);
         int vc2 = getMaxSameC(value2s);
-        if (values.length == 4) {
+        if (values.length == 4 && value2s.length == 4) {
             if (vc2 < 4 && vc1 == 4) return true;
             if (vc2 == 3 && vc1 == 3) {
                 int v2 = getMaxSameN(value2s);
@@ -387,7 +414,6 @@ public class Table {
             }
         }
         if (values.length >= 5) {
-
             if (Utils.isFly(values) > 0 && Utils.isFly(value2s) > 0)
                 return Utils.isBiggerFly(values, value2s);
             //判断三带二
@@ -442,19 +468,77 @@ public class Table {
     public void tipsPool() {
         long q = players.get(index);
         Message message = playerEns.get(q).getValue();
-        if (this_cards == null)
+        if (this_cards == null) {
             group.sendMessage(new MessageChainBuilder()
                     .append(message)
                     .append("轮到你出牌了,你可以随意出")
                     .build()
             );
-        else
+        } else {
             group.sendMessage(new MessageChainBuilder()
                     .append(message)
+                    .append(getNowCardsName())
                     .append(getImageFromFilePath(Drawer.createImage(cards2Images(this_cards.cards)), group))
                     .append("轮到你出牌了,这是你要打的牌")
                     .build()
             );
+        }
+    }
+
+    private String getNowCardsName() {
+        List<Card> cards = this_cards.cards;
+        final int[] values = cards2values(cards);
+        Arrays.sort(values);
+        if (values.length == 1) return "";
+        if (values.length == 2) return values[0] == values[1] ? "对子" : (values[0] == 14 && values[1] == 15) ? "王炸" : "";
+        if (values.length == 3) {
+            return getMaxSameC(values) == 3 ? "三个" : "";
+        }
+        if (values.length == 4) {
+            if (getMaxSameC(values) >= 3) {
+                return "三帯一";
+            } else if (values[0] == values[1] && values[2] == values[3] && values[1] == values[2]) {
+                return "炸弹";
+            } else return "";
+        }
+        if (values.length >= 5) {
+            if (Utils.isFly(values) > 0) return "飞机";
+            //判断三带二
+            if (values.length == 5)
+                if (getMaxSameC(values) == 3)
+                    return "三对一对";
+            //判断顺子
+            boolean k = true;
+            int v = values[0];
+            for (int v1 : values) {
+                if (v1 == v) {
+                    v++;
+                    continue;
+                } else {
+                    k = false;
+                    break;
+                }
+            }
+            if (k) return "顺子";
+            //判断连对
+            if (values.length >= 6 && values.length % 2 == 0) {
+                k = true;
+                int upV = -1;
+                for (int i = 0; i < values.length; i++) {
+                    if (i % 2 == 0) {
+                        upV = upV == -1 ? values[i] : upV + 1;
+                    } else {
+                        if (upV == values[i]) continue;
+                        else {
+                            k = false;
+                            break;
+                        }
+                    }
+                }
+                if (k) return "连对";
+            }
+        }
+        return "";
     }
 
     private void testWillWin() {
@@ -495,17 +579,26 @@ public class Table {
 
     private void tipsCivilianWin() {
         MessageChainBuilder builder = new MessageChainBuilder();
-        for (Map.Entry<Member, Message> e : playerEns.values()) {
-            builder.append(e.getValue());
+        for (long q : players) {
+            if (q == landlord) {
+                continue;
+            }
+            builder.append(new At(q).plus(new Face(Face.DE_YI))).append("\n");
         }
+        builder.append(new At(landlord).plus(new Face(Face.SHUAI))).append("\n");
+
         builder.append("平民胜利!!!");
         group.sendMessage(builder.build());
     }
 
     private void tipsLandlordWin() {
         MessageChainBuilder builder = new MessageChainBuilder();
-        for (Map.Entry<Member, Message> e : playerEns.values()) {
-            builder.append(e.getValue());
+        builder.append(new At(landlord).plus(new Face(Face.DE_YI))).append("\n");
+        for (long q : players) {
+            if (q != landlord) {
+                continue;
+            }
+            builder.append(new At(q).plus(new Face(Face.SHUAI))).append("\n");
         }
         builder.append("地主胜利!!!");
         group.sendMessage(builder.build());
@@ -543,11 +636,17 @@ public class Table {
     public static void main(String[] args) {
         List<Card> l1 = new CopyOnWriteArrayList<>();
         List<Card> l2 = new CopyOnWriteArrayList<>();
-        l1.add(new Card(Card.En._3, Card.Type._V));
-        l1.add(new Card(Card.En._3, Card.Type._W));
-        l1.add(new Card(Card.En._3, Card.Type._A));
-        l1.add(new Card(Card.En._3, Card.Type._X));
-        l2.add(new Card(Card.En._Y, Card.Type._G));
+        l1.add(new Card(Card.En._4, Card.Type._V));
+        l1.add(new Card(Card.En._4, Card.Type._W));
+        l1.add(new Card(Card.En._4, Card.Type._A));
+        l1.add(new Card(Card.En._5, Card.Type._X));
+
+        l2.add(new Card(Card.En._3, Card.Type._V));
+        l2.add(new Card(Card.En._3, Card.Type._W));
+        l2.add(new Card(Card.En._3, Card.Type._A));
+        l2.add(new Card(Card.En._4, Card.Type._X));
+        l2.add(new Card(Card.En._4, Card.Type._X));
+
         System.out.println(isBigger(l1, l2));
     }
 }

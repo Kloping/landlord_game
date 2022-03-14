@@ -36,7 +36,7 @@ public class Command {
             case "不抢":
             case "不抢地主":
                 if (table != null)
-                    result = table.no_rob(qq);
+                    result = table.noRob(qq);
                 break;
             case "结束游戏":
                 if (isCreated && !isStarted)
