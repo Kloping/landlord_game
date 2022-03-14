@@ -468,20 +468,22 @@ public class Table {
     public void tipsPool() {
         long q = players.get(index);
         Message message = playerEns.get(q).getValue();
-        if (this_cards == null) {
-            group.sendMessage(new MessageChainBuilder()
-                    .append(message)
-                    .append("轮到你出牌了,你可以随意出")
-                    .build()
-            );
-        } else {
-            group.sendMessage(new MessageChainBuilder()
-                    .append(message)
-                    .append(getNowCardsName())
-                    .append(getImageFromFilePath(Drawer.createImage(cards2Images(this_cards.cards)), group))
-                    .append("轮到你出牌了,这是你要打的牌")
-                    .build()
-            );
+        if (!overed) {
+            if (this_cards == null) {
+                group.sendMessage(new MessageChainBuilder()
+                        .append(message)
+                        .append("轮到你出牌了,你可以随意出")
+                        .build()
+                );
+            } else {
+                group.sendMessage(new MessageChainBuilder()
+                        .append(message)
+                        .append(getNowCardsName())
+                        .append(getImageFromFilePath(Drawer.createImage(cards2Images(this_cards.cards)), group))
+                        .append("轮到你出牌了,这是你要打的牌")
+                        .build()
+                );
+            }
         }
     }
 
@@ -556,10 +558,13 @@ public class Table {
         group.sendMessage(new MessageChainBuilder().append(m.getNick()).append("警告!警告!就剩" + n + "张牌了!").build());
     }
 
+    private boolean overed = false;
+
     private void testWin() {
         for (long q : playerCards.keySet()) {
             List<Card> cards = playerCards.get(q);
             if (cards.size() == 0) {
+                overed = true;
                 int n = players.indexOf(q);
                 if (n == landlord)
                     tipsLandlordWin();
@@ -586,7 +591,6 @@ public class Table {
             builder.append(new At(q).plus(new Face(Face.DE_YI))).append("\n");
         }
         builder.append(new At(landlord).plus(new Face(Face.SHUAI))).append("\n");
-
         builder.append("平民胜利!!!");
         group.sendMessage(builder.build());
     }
