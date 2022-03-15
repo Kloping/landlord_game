@@ -659,15 +659,19 @@ public class Table {
     public static void main(String[] args) {
         List<Card> l1 = new CopyOnWriteArrayList<>();
         List<Card> l2 = new CopyOnWriteArrayList<>();
-        l1.add(new Card(Card.En._4, Card.Type._V));
+        l1.add(new Card(Card.En._3, Card.Type._V));
         l1.add(new Card(Card.En._4, Card.Type._W));
-        l1.add(new Card(Card.En._4, Card.Type._A));
-        l1.add(new Card(Card.En._4, Card.Type._X));
+        l1.add(new Card(Card.En._5, Card.Type._A));
+        l1.add(new Card(Card.En._6, Card.Type._X));
+        l1.add(new Card(Card.En._7, Card.Type._X));
+        l1.add(new Card(Card.En._8, Card.Type._X));
 
-        l2.add(new Card(Card.En._3, Card.Type._V));
-        l2.add(new Card(Card.En._3, Card.Type._W));
-        l2.add(new Card(Card.En._3, Card.Type._A));
-        l2.add(new Card(Card.En._3, Card.Type._X));
-        System.out.println(isBigger(l2, l1));
+        l2.add(new Card(Card.En._4, Card.Type._V));
+        l2.add(new Card(Card.En._5, Card.Type._W));
+        l2.add(new Card(Card.En._6, Card.Type._A));
+        l2.add(new Card(Card.En._7, Card.Type._X));
+        l2.add(new Card(Card.En._8, Card.Type._X));
+        l2.add(new Card(Card.En._9, Card.Type._X));
+        System.out.println(isBigger(l1, l2));
     }
 }
