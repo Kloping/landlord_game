@@ -45,7 +45,7 @@ public class Command {
                 else tipsCantClose(group);
                 break;
             case "强制结束游戏":
-                if (qq == HPluginLandlord.youQQ) destroy();
+                if (qq == PluginLandlord.youQQ) destroy();
                 else tipsCantClose(group);
                 break;
             default:
@@ -83,7 +83,7 @@ public class Command {
     public static synchronized String InitTable(Group group) {
         if (!isCreated) {
             isCreated = true;
-            HPluginLandlord.threads.execute(() -> {
+            PluginLandlord.threads.execute(() -> {
                 if (LIST_IMAGE_MAP.containsKey(group.getId())) {
                     table = new Table(group, LIST_IMAGE_MAP.get(group.getId()));
                 } else {

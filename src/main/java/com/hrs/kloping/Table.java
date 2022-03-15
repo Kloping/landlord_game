@@ -13,7 +13,7 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import static com.hrs.kloping.HPluginLandlord.threads;
+import static com.hrs.kloping.PluginLandlord.threads;
 import static com.hrs.kloping.Utils.*;
 
 /**

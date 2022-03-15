@@ -18,8 +18,8 @@ import java.util.concurrent.Executors;
  * @Date 21/9/14
  * <p>
  */
-public final class HPluginLandlord extends JavaPlugin {
-    public static final HPluginLandlord INSTANCE = new HPluginLandlord();
+public final class PluginLandlord extends JavaPlugin {
+    public static final PluginLandlord INSTANCE = new PluginLandlord();
     /**
      * 换成你的QQ 用来强制关闭游戏
      */
@@ -27,7 +27,7 @@ public final class HPluginLandlord extends JavaPlugin {
 
     public static final ExecutorService threads = Executors.newFixedThreadPool(10);
 
-    private HPluginLandlord() {
+    private PluginLandlord() {
         super(new JvmPluginDescriptionBuilder("com.hrs.kloping.h_plugin_Landlord", "2.7-sequel")
                 .name("LandlordGame")
                 .info("斗地主游戏")
