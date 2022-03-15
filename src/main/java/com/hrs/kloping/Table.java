@@ -426,7 +426,7 @@ public class Table {
                     return true;
                 }
             } else {
-                return false;
+                return true;
             }
         }
         if (values.length >= 5) {
@@ -666,12 +666,10 @@ public class Table {
         l1.add(new Card(Card.En._7, Card.Type._X));
         l1.add(new Card(Card.En._8, Card.Type._X));
 
-        l2.add(new Card(Card.En._4, Card.Type._V));
-        l2.add(new Card(Card.En._5, Card.Type._W));
-        l2.add(new Card(Card.En._6, Card.Type._A));
-        l2.add(new Card(Card.En._7, Card.Type._X));
-        l2.add(new Card(Card.En._8, Card.Type._X));
-        l2.add(new Card(Card.En._9, Card.Type._X));
-        System.out.println(isBigger(l1, l2));
+        l2.add(new Card(Card.En._3, Card.Type._V));
+        l2.add(new Card(Card.En._3, Card.Type._W));
+        l2.add(new Card(Card.En._3, Card.Type._A));
+        l2.add(new Card(Card.En._3, Card.Type._X));
+        System.out.println(isBigger(l2, l1));
     }
 }
