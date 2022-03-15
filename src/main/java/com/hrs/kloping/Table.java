@@ -13,7 +13,7 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import static com.hrs.kloping.HPlugin_Landlord.threads;
+import static com.hrs.kloping.HPluginLandlord.threads;
 import static com.hrs.kloping.Utils.*;
 
 /**
@@ -61,15 +61,21 @@ public class Table {
                     playerEns.put(q, getEntry(group.get(q), new MessageChainBuilder().append(new At(players.get(i))).append("\r\n").build()));
                 }
                 group.sendMessage("开始发牌!");
-                startDeal();
+                try {
+                    startDeal();
+                } catch (Throwable e) {
+                    e.printStackTrace();
+                    group.sendMessage("发牌异常出错,请重新开始游戏");
+                    Command.destroy();
+                }
             });
         }
     }
 
     int r1 = -1, r2 = -1, r3 = -1;
 
-    private void startDeal() {
-        InitR();
+    private void startDeal() throws Throwable {
+        initR();
         Dcards.add(ListCards.get(r1));
         Dcards.add(ListCards.get(r2));
         Dcards.add(ListCards.get(r3));
@@ -97,7 +103,7 @@ public class Table {
         startRob();
     }
 
-    private synchronized void sendThisCards(final Map.Entry<Member, Message> kv, final long q) {
+    private synchronized void sendThisCards(final Map.Entry<Member, Message> kv, final long q) throws Exception{
         kv.getKey().sendMessage(
                 new MessageChainBuilder()
                         .append("你这一局的牌是:\r\n")
@@ -179,7 +185,7 @@ public class Table {
         }
     }
 
-    private void InitR() {
+    private void initR() {
         r1 = rand.nextInt(54);
         do {
             r2 = rand.nextInt(53);
@@ -403,14 +409,24 @@ public class Table {
         }
         int vc1 = getMaxSameC(values);
         int vc2 = getMaxSameC(value2s);
-        if (values.length == 4 && value2s.length == 4) {
-            if (vc2 < 4 && vc1 == 4) return true;
-            if (vc2 == 3 && vc1 == 3) {
-                int v2 = getMaxSameN(value2s);
-                int v1 = getMaxSameN(values);
-                return v1 > v2;
-            } else if (vc1 == 4 && vc2 == 4) {
-                return values[0] > value2s[0];
+        if (values.length == 4) {
+            if (value2s.length == 4) {
+                if (vc2 < 4 && vc1 == 4) return true;
+                if (vc2 == 3 && vc1 == 3) {
+                    int v2 = getMaxSameN(value2s);
+                    int v1 = getMaxSameN(values);
+                    return v1 > v2;
+                } else if (vc1 == 4 && vc2 == 4) {
+                    return values[0] > value2s[0];
+                }
+            } else if (value2s.length == 2) {
+                if (value2s[0] == 14 && value2s[1] == 15) {
+                    return false;
+                } else {
+                    return true;
+                }
+            } else {
+                return false;
             }
         }
         if (values.length >= 5) {
@@ -478,7 +494,7 @@ public class Table {
             } else {
                 group.sendMessage(new MessageChainBuilder()
                         .append(message)
-                        .append(getNowCardsName())
+                        .append(getNowCardsName(this_cards.cards))
                         .append(getImageFromFilePath(Drawer.createImage(cards2Images(this_cards.cards)), group))
                         .append("轮到你出牌了,这是你要打的牌")
                         .build()
@@ -487,8 +503,7 @@ public class Table {
         }
     }
 
-    private String getNowCardsName() {
-        List<Card> cards = this_cards.cards;
+    private static String getNowCardsName(List<Card> cards) {
         final int[] values = cards2values(cards);
         Arrays.sort(values);
         if (values.length == 1) return "";
@@ -497,8 +512,10 @@ public class Table {
             return getMaxSameC(values) == 3 ? "三个" : "";
         }
         if (values.length == 4) {
-            if (getMaxSameC(values) >= 3) {
+            if (getMaxSameC(values) == 3) {
                 return "三帯一";
+            } else if (getMaxSameC(values) == 4) {
+                return "炸弹";
             } else if (values[0] == values[1] && values[2] == values[3] && values[1] == values[2]) {
                 return "炸弹";
             } else return "";
@@ -582,24 +599,26 @@ public class Table {
         }
     }
 
-    private void tipsCivilianWin() {
+    public void tipsCivilianWin() {
         MessageChainBuilder builder = new MessageChainBuilder();
+        long lq = players.get((int) landlord);
         for (long q : players) {
-            if (q == landlord) {
+            if (q == lq) {
                 continue;
             }
             builder.append(new At(q).plus(new Face(Face.DE_YI))).append("\n");
         }
-        builder.append(new At(landlord).plus(new Face(Face.SHUAI))).append("\n");
+        builder.append(new At(lq).plus(new Face(Face.SHUAI))).append("\n");
         builder.append("平民胜利!!!");
         group.sendMessage(builder.build());
     }
 
     private void tipsLandlordWin() {
         MessageChainBuilder builder = new MessageChainBuilder();
-        builder.append(new At(landlord).plus(new Face(Face.DE_YI))).append("\n");
+        long lq = players.get((int) landlord);
+        builder.append(new At(lq).plus(new Face(Face.DE_YI))).append("\n");
         for (long q : players) {
-            if (q != landlord) {
+            if (q != lq) {
                 continue;
             }
             builder.append(new At(q).plus(new Face(Face.SHUAI))).append("\n");
@@ -643,14 +662,12 @@ public class Table {
         l1.add(new Card(Card.En._4, Card.Type._V));
         l1.add(new Card(Card.En._4, Card.Type._W));
         l1.add(new Card(Card.En._4, Card.Type._A));
-        l1.add(new Card(Card.En._5, Card.Type._X));
+        l1.add(new Card(Card.En._4, Card.Type._X));
 
         l2.add(new Card(Card.En._3, Card.Type._V));
         l2.add(new Card(Card.En._3, Card.Type._W));
         l2.add(new Card(Card.En._3, Card.Type._A));
-        l2.add(new Card(Card.En._4, Card.Type._X));
-        l2.add(new Card(Card.En._4, Card.Type._X));
-
-        System.out.println(isBigger(l1, l2));
+        l2.add(new Card(Card.En._3, Card.Type._X));
+        System.out.println(isBigger(l2, l1));
     }
 }
