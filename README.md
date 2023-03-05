@@ -1,6 +1,6 @@
 ## Mirai 斗地主 插件 Java 实现基本的玩法
 
-把images.zip解压放在Mirai Console 安装目录下 已便插件找到图片资源
+把[images.zip](https://github.com/Kloping/landlord_game/releases/download/0.16/images.zip)解压放在Mirai Console 安装目录下 已便插件找到图片资源
 
 配置: /conf/Landlord/目录下
     
